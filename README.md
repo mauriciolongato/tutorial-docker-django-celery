@@ -11,6 +11,10 @@ Clone repository
 Run docker-compose
     
     sudo docker-compose up
+
+Grant permission to postgres-data directory
+
+    sudo chown -R $USER:$USER .
     
 Set django - makemigrations, migrate and admin
     
