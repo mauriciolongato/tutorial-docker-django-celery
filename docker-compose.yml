@@ -13,8 +13,26 @@ services:
       - ./.postgres-data/pgdata:/var/lib/postgresql/data/pgdata
     ports:
        - "5432:5432"
+  rabbitmq: # login guest:guest
+    image: rabbitmq:management
+    ports:
+      - "4369:4369"
+      - "5671:5671"
+      - "5672:5672"
+      - "25672:25672"
+      - "15671:15671"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:15672"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
   web:
     build: .
+    environment:
+      - HOSTNAMERABBIT=rabbitmq
+    restart: on-failure
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
@@ -22,3 +40,6 @@ services:
       - "8000:8000"
     depends_on:
       - db
+      - rabbitmq
+    links:
+      - rabbitmq
