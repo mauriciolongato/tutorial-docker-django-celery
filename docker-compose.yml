@@ -13,6 +13,24 @@ services:
       - ./.postgres-data/pgdata:/var/lib/postgresql/data/pgdata
     ports:
        - "5432:5432"
+
+  web:
+    build: .
+    environment:
+      - HOSTNAMERABBIT=rabbitmq
+    restart: on-failure
+    command: >
+      sh -c "pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - rabbitmq
+    links:
+      - rabbitmq
+
   rabbitmq: # login guest:guest
     image: rabbitmq:management
     ports:
@@ -27,19 +45,3 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-
-  web:
-    build: .
-    environment:
-      - HOSTNAMERABBIT=rabbitmq
-    restart: on-failure
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/code
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-      - rabbitmq
-    links:
-      - rabbitmq

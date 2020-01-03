@@ -25,7 +25,7 @@ SECRET_KEY = 'slx@-y3zazymd=x9&(-9-ffu)a2!^ctjd+7bf#zg5o*d0yxs#c'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -129,3 +129,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CELERY_BROKER_URL = 'amqp://rabbitmq:5672'
